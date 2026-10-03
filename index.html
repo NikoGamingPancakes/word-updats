@@ -3,55 +3,128 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Weekly Updates</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: Arial, Helvetica, sans-serif;
       background: #111;
-      color: white;
+      color: #eee;
     }
 
     header {
-      padding: 60px 20px;
+      background: #181818;
+      border-bottom: 1px solid #333;
+      padding: 50px 20px;
       text-align: center;
-      background: #ff6a00;
     }
 
     header h1 {
-      font-size: 60px;
       margin: 0;
+      font-size: 48px;
     }
 
     header p {
-      font-size: 20px;
+      color: #aaa;
+      margin-top: 10px;
     }
 
     main {
-      max-width: 850px;
-      margin: auto;
-      padding: 40px 20px;
+      width: min(900px, 92%);
+      margin: 40px auto;
+    }
+
+    .week {
+      background: #191919;
+      border: 1px solid #2c2c2c;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .week-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .week-range {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .status {
+      font-size: 14px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .has-update {
+      background: #1f542d;
+      color: #aaffbd;
+    }
+
+    .no-update {
+      background: #333;
+      color: #aaa;
+    }
+
+    .empty {
+      color: #777;
+      margin: 18px 0 0;
+      font-style: italic;
     }
 
     .update {
-      background: #1d1d1d;
-      border-radius: 16px;
-      padding: 25px;
-      margin-bottom: 25px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid #333;
     }
 
-    .date {
-      color: #aaa;
-      font-size: 14px;
+    .update-date {
+      color: #999;
+      margin-bottom: 8px;
     }
 
     h2 {
-      color: #ff7a18;
+      margin-top: 0;
+      font-size: 28px;
+    }
+
+    h3 {
+      margin-top: 26px;
+      font-size: 16px;
+      letter-spacing: 1px;
+      color: #ff8c32;
+    }
+
+    ul {
+      padding-left: 24px;
     }
 
     li {
-      margin: 10px 0;
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 36px;
+      }
+
+      .week-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 8px;
+      }
     }
   </style>
 </head>
@@ -59,42 +132,290 @@
 <body>
 
 <header>
-  <h1> ORANGE OCTOBER</h1>
-  <p>Official weekly patch notes</p>
+  <h1>Weekly Updates</h1>
+  <p>2026 update history</p>
 </header>
 
-<main>
+<main id="weeks"></main>
 
-  <div class="update">
-    <div class="date">3 October 2026</div>
+<script>
 
-    <h2>Orange October Update #1</h2>
+const YEAR = 2026;
 
-    <h3>NEW CONTENT</h3>
-    <ul>
-      <li>ornge ocbobter!!!</li>
-      <li>october month the oranges GROW GROW GROW</li>
-    </ul>
+/*
+  ADD NEW UPDATES HERE.
 
-    <h3>NEW PLUMBER TRICKS</h3>
-    <ul>
-      <li>orang</li>
-      <li>mei mei orange</li>
-      <li>Creamy Carl 2</li>
-    </ul>
+  Copy one of these sections whenever you make a new update.
+*/
 
-    <h3>CHANGES</h3>
-    <ul>
-      <li>removed the rot</li>
-    </ul>
+const updates = [
 
-    <h3>COMING SOON</h3>
-    <ul>
-      <li>Apple April</li>
-    </ul>
-  </div>
+  {
+    date: "2026-10-03",
+    title: "October Update #1",
 
-</main>
+    sections: [
+      {
+        title: "NEW CONTENT",
+        items: [
+          "october!!!",
+          "october month the oranges GROW GROW GROW"
+        ]
+      },
+
+      {
+        title: "NEW PLUMBER TRICKS",
+        items: [
+          "orange",
+          "mei mei orange",
+          "Creamy Carl 2"
+        ]
+      },
+
+      {
+        title: "CHANGES",
+        items: [
+          "removed the rot"
+        ]
+      },
+
+      {
+        title: "COMING SOON",
+        items: [
+          "October Update #2"
+        ]
+      }
+    ]
+  }
+
+];
+
+
+// -------------------------------
+// YOU DON'T NEED TO EDIT BELOW THIS
+// -------------------------------
+
+const container = document.getElementById("weeks");
+
+function makeUTCDate(year, month, day) {
+  return new Date(Date.UTC(year, month, day));
+}
+
+function addDays(date, days) {
+  const copy = new Date(date);
+  copy.setUTCDate(copy.getUTCDate() + days);
+  return copy;
+}
+
+function formatDate(date) {
+  return date.toLocaleDateString("en-AU", {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "long",
+    year: "numeric"
+  });
+}
+
+function formatShortDate(date) {
+  return date.toLocaleDateString("en-AU", {
+    timeZone: "UTC",
+    day: "numeric",
+    month: "short"
+  });
+}
+
+function parseDate(dateString) {
+  const [year, month, day] = dateString
+    .split("-")
+    .map(Number);
+
+  return makeUTCDate(year, month - 1, day);
+}
+
+
+// Build every week of 2026.
+
+const yearStart = makeUTCDate(YEAR, 0, 1);
+const yearEnd = makeUTCDate(YEAR, 11, 31);
+
+let weekStart = new Date(yearStart);
+let weeks = [];
+
+while (weekStart <= yearEnd) {
+
+  let weekEnd;
+
+  // First week ends on Sunday.
+  if (weeks.length === 0) {
+    const day = weekStart.getUTCDay();
+
+    const daysUntilSunday =
+      day === 0 ? 0 : 7 - day;
+
+    weekEnd = addDays(
+      weekStart,
+      daysUntilSunday
+    );
+  }
+
+  // Every week after that is Monday → Sunday.
+  else {
+    weekEnd = addDays(weekStart, 6);
+  }
+
+  if (weekEnd > yearEnd) {
+    weekEnd = new Date(yearEnd);
+  }
+
+  weeks.push({
+    start: new Date(weekStart),
+    end: new Date(weekEnd)
+  });
+
+  weekStart = addDays(weekEnd, 1);
+}
+
+
+// Show newest weeks first.
+
+weeks.reverse();
+
+
+for (const week of weeks) {
+
+  const weekUpdates = updates.filter(update => {
+
+    const date = parseDate(update.date);
+
+    return (
+      date >= week.start &&
+      date <= week.end
+    );
+
+  });
+
+
+  const card = document.createElement("section");
+
+  card.className = "week";
+
+
+  const header = document.createElement("div");
+
+  header.className = "week-header";
+
+
+  const range = document.createElement("div");
+
+  range.className = "week-range";
+
+  range.textContent =
+    `${formatShortDate(week.start)} – ${formatShortDate(week.end)}`;
+
+
+  const status = document.createElement("div");
+
+  status.className =
+    "status " +
+    (weekUpdates.length
+      ? "has-update"
+      : "no-update");
+
+
+  status.textContent =
+    weekUpdates.length
+      ? "UPDATE"
+      : "NO UPDATE";
+
+
+  header.appendChild(range);
+  header.appendChild(status);
+
+  card.appendChild(header);
+
+
+  if (weekUpdates.length === 0) {
+
+    const message = document.createElement("p");
+
+    message.className = "empty";
+
+    message.textContent =
+      "No update this week.";
+
+    card.appendChild(message);
+
+  }
+
+
+  for (const update of weekUpdates) {
+
+    const updateBox =
+      document.createElement("article");
+
+    updateBox.className = "update";
+
+
+    const updateDate =
+      document.createElement("div");
+
+    updateDate.className = "update-date";
+
+    updateDate.textContent =
+      formatDate(parseDate(update.date));
+
+
+    const title =
+      document.createElement("h2");
+
+    title.textContent = update.title;
+
+
+    updateBox.appendChild(updateDate);
+    updateBox.appendChild(title);
+
+
+    for (const section of update.sections) {
+
+      const heading =
+        document.createElement("h3");
+
+      heading.textContent =
+        section.title;
+
+
+      const list =
+        document.createElement("ul");
+
+
+      for (const item of section.items) {
+
+        const li =
+          document.createElement("li");
+
+        li.textContent = item;
+
+        list.appendChild(li);
+
+      }
+
+
+      updateBox.appendChild(heading);
+      updateBox.appendChild(list);
+
+    }
+
+
+    card.appendChild(updateBox);
+
+  }
+
+
+  container.appendChild(card);
+
+}
+
+</script>
 
 </body>
 </html>
